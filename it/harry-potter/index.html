@@ -1,1 +1,193 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LEGO - Harry Potter - BrickTracker</title>
 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: #d0021b;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 900;
+      display: inline-block;
+      padding: 5px 15px;
+      background: #ffcf00;
+      color: #000;
+      border: 4px solid #000;
+      border-radius: 8px;
+      letter-spacing: 1px;
+      box-shadow: 4px 4px 0px #000;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+    }
+
+    h2 {
+      border-left: 5px solid #d0021b;
+      padding-left: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #f0f0f0;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .set-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .set-card img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
+      border-radius: 6px;
+      background: white;
+      padding: 5px;
+    }
+
+    .set-info {
+      flex: 1;
+    }
+
+    .price {
+      margin-top: 6px;
+      font-weight: bold;
+    }
+
+    .btn-container {
+      margin-top: 6px;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-right: 6px;
+      padding: 6px 10px;
+      font-size: 12px;
+      background: #d0021b;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #a80116;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 15px;
+      background: #333;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    .back:hover {
+      background: #000;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>BrickTracker</h1>
+    <p>LEGO Harry Potter™</p>
+  </header>
+
+  <main>
+
+    <h2>Novità</h2>
+
+    <ul>
+      <li>
+        <div class="set-card">
+          
+          <img src="https://www.lego.com/cdn/cs/set/assets/bltad700a75d2fe47e4/blt46c340d866ff0c2f-76469_Prod_en-gb.png?format=webply&fit=bounds&quality=100&width=400&height=400&dpr=1">
+
+          <div class="set-info">
+            <div>Dobby™ l’elfo libero - #76469</div>
+
+            <div class="price">Prezzo di lancio: 34,99 €</div>
+
+            <div class="btn-container">
+              <a href="https://www.lego.com/it-it/product/dobby-the-free-elf-76469" target="_blank" class="btn">LEGO</a>
+              <a href="https://www.amazon.it/LEGO-Harry-Potter-Libero-Giocattolo/dp/B0FPXL9SFM?ref_=ast_sto_dp" target="_blank" class="btn">Amazon</a>
+            </div>
+          </div>
+
+        </div>
+      </li>
+    </ul>
+
+    
+    <ul>
+      <li>
+        <div class="set-card">
+          
+          <img src="https://www.lego.com/cdn/cs/set/assets/bltf1cee3fe58d0cd09/blt0860330851b273fa-76474_Prod.png?format=webply&fit=bounds&quality=75&width=800&height=800&dpr=1">
+
+          <div class="set-info">
+            <div>Piante di erbologia di Hogwarts™ - #76474</div>
+
+            <div class="price">Prezzo di lancio: 99,99 €</div>
+
+            <div class="btn-container">
+              <a href="https://www.lego.com/it-it/product/hogwarts-herbology-plants-76474" target="_blank" class="btn">LEGO</a>
+              <a href="https://www.amazon.it/LEGO-Potter-Piante-Erbologia-Hogwarts/dp/B0FPXFR4XB?ref_=ast_sto_dp" target="_blank" class="btn">Amazon</a>
+            </div>
+          </div>
+
+        </div>
+      </li>
+    </ul>
+
+    <a href="./" class="back">← Torna alla home</a>
+
+  </main>
+
+  <footer>
+    © 2026 BrickTracker
+  </footer>
+
+</body>
+</html>
