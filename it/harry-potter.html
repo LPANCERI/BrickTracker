@@ -55,8 +55,27 @@
     li {
       background: #f0f0f0;
       margin: 10px 0;
-      padding: 12px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .set-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .set-card img {
+      width: 90px;
+      height: 90px;
+      object-fit: contain;
       border-radius: 6px;
+      background: white;
+      padding: 5px;
+    }
+
+    .set-info {
+      flex: 1;
     }
 
     .price {
@@ -65,12 +84,12 @@
     }
 
     .btn-container {
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .btn {
       display: inline-block;
-      margin-right: 8px;
+      margin-right: 6px;
       padding: 6px 10px;
       font-size: 12px;
       background: #d0021b;
@@ -121,12 +140,22 @@
 
     <ul>
       <li>
-        Dobby™ l’elfo libero - #76469
-        <div class="price">Prezzo di lancio: 34,99€</div>
+        <div class="set-card">
+          
+          <img src="https://www.lego.com/cdn/cs/set/assets/bltad700a75d2fe47e4/blt46c340d866ff0c2f-76469_Prod_en-gb.png?format=webply&fit=bounds&quality=100&width=400&height=400&dpr=1" 
+               alt="LEGO Dobby 76469">
 
-        <div class="btn-container">
-          <a href="https://www.lego.com/it-it/product/dobby-the-free-elf-76469" target="_blank" class="btn">Sito LEGO</a>
-          <a href="https://www.amazon.it/LEGO-Harry-Potter-Libero-Giocattolo/dp/B0FPXL9SFM?ref_=ast_sto_dp" target="_blank" class="btn">Amazon</a>
+          <div class="set-info">
+            <div>Dobby™ l’elfo libero - #76469</div>
+
+            <div class="price">Prezzo di lancio: 34,99€</div>
+
+            <div class="btn-container">
+              <a href="https://www.lego.com/it-it/product/dobby-the-free-elf-76469" target="_blank" class="btn">LEGO</a>
+              <a href="https://www.amazon.it/LEGO-Harry-Potter-Libero-Giocattolo/dp/B0FPXL9SFM?ref_=ast_sto_dp" target="_blank" class="btn">Amazon</a>
+            </div>
+          </div>
+
         </div>
       </li>
     </ul>
