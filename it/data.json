@@ -2,6 +2,7 @@
   {
     "nome": "Dobby™ l’elfo libero",
     "set": "76469",
+    "tema": "harry-potter",
     "prezzo": "34,99 €",
     "img": "https://www.lego.com/cdn/cs/set/assets/bltad700a75d2fe47e4/blt46c340d866ff0c2f-76469_Prod_en-gb.png?format=webply&fit=bounds&quality=100&width=400&height=400&dpr=1",
     "lego": "https://www.lego.com/it-it/product/dobby-the-free-elf-76469",
@@ -10,6 +11,7 @@
   {
     "nome": "Piante di erbologia di Hogwarts™",
     "set": "76474",
+    "tema": "harry-potter",
     "prezzo": "99,99 €",
     "img": "https://www.lego.com/cdn/cs/set/assets/bltf1cee3fe58d0cd09/blt0860330851b273fa-76474_Prod.png?format=webply&fit=bounds&quality=75&width=800&height=800&dpr=1",
     "lego": "https://www.lego.com/it-it/product/hogwarts-herbology-plants-76474",
