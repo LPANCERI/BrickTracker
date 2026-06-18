@@ -25,5 +25,14 @@
     "img": "https://www.lego.com/cdn/cs/set/assets/bltd0d4b1fd52a776a7/blt8109326057a1ec3f-76462_Prod.png?format=webply&fit=bounds&quality=60&width=800&height=800&dpr=2",
     "lego": "https://www.lego.com/it-it/product/hogwarts-house-crest-76462",
     "amazon": "https://www.amazon.it/LEGO-Harry-Potter-Stemma-Hogwarts/dp/B0FPXDT4CG?ref_=ast_sto_dp"
+  },
+  {
+    "nome": "Castello di Hogwarts™: Ala Est",
+    "set": "76473",
+    "tema": "harry-potter",
+    "prezzo": "249,99 €",
+    "img": "https://www.lego.com/cdn/cs/set/assets/blta636c90cedae1099/blt71e715dde083de25-76473_Prod.png?format=webply&fit=bounds&quality=60&width=800&height=800&dpr=2",
+    "lego": "https://www.lego.com/it-it/product/hogwarts-castle-east-wing-76473",
+    "amazon": "https://www.amazon.it/LEGO-Harry-Potter-Castello-Hogwarts/dp/B0FPXFKL1D?ref_=ast_sto_dp"
   }
 ]
