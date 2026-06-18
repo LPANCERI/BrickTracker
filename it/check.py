@@ -15,10 +15,24 @@ def get_price(asin):
 
     try:
         response = requests.get(url, headers=HEADERS, timeout=10)
+
+        if response.status_code != 200:
+            print(f"Errore HTTP {response.status_code} per {asin}")
+            return None
+
         soup = BeautifulSoup(response.text, "html.parser")
 
         tag = soup.select_one("span.a-offscreen")
-        return tag.get_text().strip() if tag else None
+
+        if not tag:
+            return None
+
+        price = tag.get_text(strip=True)
+
+        # pulizia € e spazi
+        price = price.replace("€", "").strip()
+
+        return price
 
     except Exception as e:
         print(f"Errore {asin}: {e}")
@@ -34,7 +48,6 @@ def load_prices():
 
 
 def main():
-    # carica prodotti
     with open("data.json", "r", encoding="utf-8") as f:
         products = json.load(f)
 
@@ -58,7 +71,6 @@ def main():
         else:
             print("Prezzo non trovato")
 
-    # salva tutto
     with open("prezzi.json", "w", encoding="utf-8") as f:
         json.dump(prices, f, indent=4, ensure_ascii=False)
 
