@@ -2,48 +2,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const container = document.getElementById("sets-container");
 
-  // 🔥 legge il tema dalla pagina
   const tema = document.body.dataset.tema;
 
-  fetch("../data.json")
-    .then(res => {
-      if (!res.ok) {
-        throw new Error("Errore nel caricamento del JSON");
-      }
-      return res.json();
-    })
-    .then(data => {
+  // 🔥 carichiamo entrambi i JSON
+  Promise.all([
+    fetch("../data.json").then(res => res.json()),
+    fetch("../prezzi.json").then(res => res.json())
+  ])
+  .then(([data, prezzi]) => {
 
-      // 🔥 FILTRO PER TEMA
-      const filtered = data.filter(set => set.tema === tema);
+    const filtered = data.filter(set => set.tema === tema);
 
-      filtered.forEach(set => {
-        const card = document.createElement("div");
-        card.classList.add("set-card");
+    filtered.forEach(set => {
 
-        card.innerHTML = `
-          <img src="${set.img}" alt="${set.nome}">
+      const prezzoAmazon = prezzi?.[set.id]?.amazon ?? "non disponibile";
 
-          <div class="set-info">
+      const card = document.createElement("div");
+      card.classList.add("set-card");
 
-            <div>${set.nome} - #${set.set}</div>
+      card.innerHTML = `
+        <img src="${set.img}" alt="${set.nome}">
 
-            <div class="price">Prezzo di lancio: ${set.prezzo}</div>
+        <div class="set-info">
 
-            <div class="btn-container">
-              <a href="${set.lego}" target="_blank" class="btn">LEGO</a>
-              <a href="${set.amazon}" target="_blank" class="btn">Amazon</a>
-            </div>
+          <div>${set.nome} - #${set.set}</div>
 
+          <div class="price">
+            Prezzo di lancio: ${set.prezzo} <br>
+            Prezzo Amazon: ${prezzoAmazon}
           </div>
-        `;
 
-        container.appendChild(card);
-      });
+          <div class="btn-container">
+            <a href="${set.lego}" target="_blank" class="btn">LEGO</a>
+            <a href="${set.amazon}" target="_blank" class="btn">Amazon</a>
+          </div>
 
-    })
-    .catch(err => {
-      console.error("Errore:", err);
+        </div>
+      `;
+
+      container.appendChild(card);
     });
+
+  })
+  .catch(err => {
+    console.error("Errore:", err);
+  });
 
 });
