@@ -22,14 +22,21 @@ def get_price(asin):
 
         soup = BeautifulSoup(response.text, "html.parser")
 
-        tag = soup.select_one("span.a-offscreen")
+        # 1️⃣ metodo principale (più affidabile)
+        price_tag = soup.select_one("span.a-price span.a-offscreen")
 
-        if not tag:
+        # 2️⃣ fallback se Amazon cambia layout
+        if not price_tag:
+            price_tag = soup.select_one("#priceblock_ourprice")
+        if not price_tag:
+            price_tag = soup.select_one("#priceblock_dealprice")
+
+        if not price_tag:
             return None
 
-        price = tag.get_text(strip=True)
+        price = price_tag.get_text(strip=True)
 
-        # pulizia € e spazi
+        # pulizia semplice
         price = price.replace("€", "").strip()
 
         return price
@@ -48,32 +55,41 @@ def load_prices():
 
 
 def main():
-    # dati statici (NON TOCCATI)
+    # prodotti fissi
     with open("data.json", "r", encoding="utf-8") as f:
         products = json.load(f)
 
-    # cache prezzi (dinamica)
+    # storico prezzi
     prices = load_prices()
 
     for p in products:
         asin = p["id"]
         name = p.get("name", asin)
 
-        print(f"Controllo {name} ({asin})...")
+        print(f"\nControllo {name} ({asin})...")
 
         price = get_price(asin)
 
-        # crea entry se non esiste
+        # inizializza struttura se non esiste
         if asin not in prices:
-            prices[asin] = {}
+            prices[asin] = {"history": []}
 
         if price:
-            prices[asin]["amazon"] = price
-            print("Prezzo:", price)
-        else:
-            print("Prezzo non trovato")
+            print(f"Prezzo trovato: {price}")
 
-    # salva cache aggiornata
+            # salva solo se cambia
+            last_price = prices[asin]["history"][-1] if prices[asin]["history"] else None
+
+            if price != last_price:
+                prices[asin]["history"].append(price)
+                print("✔ Prezzo aggiornato nel file")
+            else:
+                print("↻ Prezzo invariato")
+
+        else:
+            print("⚠ Prezzo non trovato")
+
+    # salva tutto
     with open("prezzi.json", "w", encoding="utf-8") as f:
         json.dump(prices, f, indent=4, ensure_ascii=False)
 
