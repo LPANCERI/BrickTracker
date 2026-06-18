@@ -17,7 +17,7 @@ def get_price(asin):
         response = requests.get(url, headers=HEADERS, timeout=10)
 
         if response.status_code != 200:
-            print(f"Errore HTTP {response.status_code} per {asin}")
+            print(f"HTTP {response.status_code} per {asin}")
             return None
 
         soup = BeautifulSoup(response.text, "html.parser")
@@ -48,9 +48,11 @@ def load_prices():
 
 
 def main():
+    # dati statici (NON TOCCATI)
     with open("data.json", "r", encoding="utf-8") as f:
         products = json.load(f)
 
+    # cache prezzi (dinamica)
     prices = load_prices()
 
     for p in products:
@@ -61,16 +63,17 @@ def main():
 
         price = get_price(asin)
 
+        # crea entry se non esiste
+        if asin not in prices:
+            prices[asin] = {}
+
         if price:
-            if asin not in prices:
-                prices[asin] = {}
-
             prices[asin]["amazon"] = price
-
             print("Prezzo:", price)
         else:
             print("Prezzo non trovato")
 
+    # salva cache aggiornata
     with open("prezzi.json", "w", encoding="utf-8") as f:
         json.dump(prices, f, indent=4, ensure_ascii=False)
 
