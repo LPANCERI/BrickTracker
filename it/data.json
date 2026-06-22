@@ -38,5 +38,15 @@
     "img": "https://www.lego.com/cdn/cs/set/assets/blta636c90cedae1099/blt71e715dde083de25-76473_Prod.png?format=webply&fit=bounds&quality=60&width=800&height=800&dpr=2",
     "lego": "https://www.lego.com/it-it/product/hogwarts-castle-east-wing-76473",
     "amazon": "https://www.amazon.it/LEGO-Harry-Potter-Castello-Hogwarts/dp/B0FPXFKL1D?ref_=ast_sto_dp"
+  },
+  {
+    "id": "76475",
+    "nome": "Foresta Proibita: Expecto Patronum",
+    "set": "76475",
+    "tema": "harry-potter",
+    "prezzo": "29,99 €",
+    "img": "https://www.lego.com/cdn/cs/set/assets/blt1bf334dcd04dd87b/blt601a52db5f25d635-76475_Prod.png?format=webply&fit=bounds&quality=70&width=800&height=800&dpr=1.5",
+    "lego": "https://www.lego.com/it-it/product/forbidden-forest-expecto-patronum-76475",
+    "amazon": "https://www.amazon.it/LEGO-Harry-Potter-Foresta-Proibita/dp/B0FPXG7VZ1?ref_=ast_sto_dp"
   }
 ]
