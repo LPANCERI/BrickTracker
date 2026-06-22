@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  fetch("./data.json")
+  fetch("../data.json")
     .then(res => {
       if (!res.ok) {
         throw new Error("Errore nel caricamento del JSON");
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     })
     .catch(err => {
-      console.error("Errore:", err);
+      console.error("Errore nel caricamento dei dati:", err);
     });
 
 });
