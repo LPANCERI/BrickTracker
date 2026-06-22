@@ -1,11 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  const container = document.getElementById("sets-container");
-
-  // 🔥 legge il tema dalla pagina
-  const tema = document.body.dataset.tema;
-
-  fetch("../data.json")
+  fetch("./data.json")
     .then(res => {
       if (!res.ok) {
         throw new Error("Errore nel caricamento del JSON");
@@ -13,11 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return res.json();
     })
     .then(data => {
+      const container = document.getElementById("sets-container");
 
-      // 🔥 FILTRO PER TEMA
-      const filtered = data.filter(set => set.tema === tema);
-
-      filtered.forEach(set => {
+      data.forEach(set => {
         const card = document.createElement("div");
         card.classList.add("set-card");
 
@@ -40,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         container.appendChild(card);
       });
-
     })
     .catch(err => {
       console.error("Errore:", err);
