@@ -1,4 +1,5 @@
 import json
+import re
 from playwright.sync_api import sync_playwright
 
 with open("input.json", "r", encoding="utf-8") as f:
@@ -11,24 +12,55 @@ with sync_playwright() as p:
     page = browser.new_page()
 
     for item in items:
-        page.goto(item["url"], timeout=60000)
+        url = item["url"]
 
-        # aspetta caricamento prezzo
-        page.wait_for_timeout(3000)
+        page.goto(url, timeout=60000, wait_until="networkidle")
+        page.wait_for_timeout(5000)
 
         price = None
 
         try:
-            # selettore LEGO (può cambiare ma questo è il più comune)
-            price_el = page.query_selector('[data-test="product-price"]')
-            if price_el:
-                price = price_el.inner_text()
-        except:
-            pass
+            # ----------------------------
+            # 1. LEGO (o siti con data-test)
+            # ----------------------------
+            selectors = [
+                '[data-test="product-price"]',
+                '[data-testid="product-price"]',
+                '.product-price'
+            ]
+
+            for sel in selectors:
+                el = page.query_selector(sel)
+                if el:
+                    price = el.inner_text().strip()
+                    break
+
+            # ----------------------------
+            # 2. AMAZON fallback
+            # ----------------------------
+            if not price:
+                price = page.evaluate("""
+                () => {
+                    const el = document.querySelector('span.a-offscreen');
+                    return el ? el.innerText : null;
+                }
+                """)
+
+            # ----------------------------
+            # 3. fallback generico (regex €)
+            # ----------------------------
+            if not price:
+                content = page.content()
+                match = re.search(r"€\s?\d+[.,]\d+", content)
+                if match:
+                    price = match.group()
+
+        except Exception:
+            price = None
 
         results.append({
             "name": item["name"],
-            "url": item["url"],
+            "url": url,
             "price": price
         })
 
