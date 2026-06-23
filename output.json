@@ -2,6 +2,7 @@
   {
     "name": "Dobby LEGO",
     "url": "https://www.lego.com/it-it/product/dobby-the-free-elf-76469",
-    "price": null
+    "price": null,
+    "error": "Page.goto: Timeout 60000ms exceeded.\nCall log:\n  - navigating to \"https://www.lego.com/it-it/product/dobby-the-free-elf-76469\", waiting until \"networkidle\"\n"
   }
 ]
