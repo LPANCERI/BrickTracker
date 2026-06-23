@@ -20,7 +20,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install requests beautifulsoup4
+          pip install requests beautifulsoup4 playwright
+          playwright install
 
       - name: Run scraper
         run: python scraper.py
