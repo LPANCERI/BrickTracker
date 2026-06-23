@@ -1,1 +1,34 @@
+name: Scrape LEGO prices
 
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * *"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: Run scraper
+        run: python scraper.py
+
+      - name: Commit output
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add output.json
+          git commit -m "update prices" || echo "no changes"
+          git push
