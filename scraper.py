@@ -9,50 +9,69 @@ results = []
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
-    page = browser.new_page()
 
     for item in items:
         url = item["url"]
 
-        try:
-            # 🔥 NON usare networkidle (LEGO non lo raggiunge mai)
-            page.goto(url, timeout=60000, wait_until="domcontentloaded")
+        page = browser.new_page()
 
-            # aspetta che React carichi contenuti
+        try:
+            print(f"\n--- Processing: {url}")
+
+            page.goto(
+                url,
+                timeout=60000,
+                wait_until="domcontentloaded"
+            )
+
             page.wait_for_selector("body", timeout=60000)
-            page.wait_for_timeout(8000)
+            page.wait_for_timeout(5000)
 
             price = None
 
-            # -------------------------
-            # 1. prova selector LEGO (se esiste)
-            # -------------------------
+            # LEGO
             try:
                 el = page.query_selector('[data-test="product-price"]')
                 if el:
                     price = el.inner_text().strip()
-            except:
+                    print("Found LEGO price:", price)
+            except Exception:
                 pass
 
-            # -------------------------
-            # 2. fallback DOM (Amazon / altri)
-            # -------------------------
+            # BooksToScrape
             if not price:
-                price = page.evaluate("""
-                () => {
-                    const el = document.querySelector('span.a-offscreen');
-                    return el ? el.innerText : null;
-                }
-                """)
+                try:
+                    el = page.query_selector(".price_color")
+                    if el:
+                        price = el.inner_text().strip()
+                        print("Found BooksToScrape price:", price)
+                except Exception:
+                    pass
 
-            # -------------------------
-            # 3. fallback universale (€ regex)
-            # -------------------------
+            # Amazon
+            if not price:
+                try:
+                    el = page.query_selector("span.a-offscreen")
+                    if el:
+                        price = el.inner_text().strip()
+                        print("Found Amazon price:", price)
+                except Exception:
+                    pass
+
+            # Fallback regex
             if not price:
                 content = page.content()
-                match = re.search(r"€\s?\d+[.,]\d+", content)
+
+                match = re.search(
+                    r"[€£$]\s?\d+[.,]\d+",
+                    content
+                )
+
                 if match:
                     price = match.group()
+                    print("Found regex price:", price)
+
+            print("Final price:", price)
 
             results.append({
                 "name": item["name"],
@@ -61,6 +80,8 @@ with sync_playwright() as p:
             })
 
         except Exception as e:
+            print("ERROR:", str(e))
+
             results.append({
                 "name": item["name"],
                 "url": url,
@@ -68,9 +89,13 @@ with sync_playwright() as p:
                 "error": str(e)
             })
 
+        finally:
+            page.close()
+
     browser.close()
 
 with open("output.json", "w", encoding="utf-8") as f:
     json.dump(results, f, indent=2, ensure_ascii=False)
 
-print("Done:", results)
+print("\nDone:")
+print(json.dumps(results, indent=2, ensure_ascii=False))
