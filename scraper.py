@@ -12,22 +12,30 @@ with sync_playwright() as p:
     page = browser.new_page()
 
     for item in items:
+        url = item["url"]
+
         try:
-            url = item["url"]
-            page.goto(url, timeout=60000, wait_until="networkidle")
-            page.wait_for_timeout(5000)
+            # 🔥 NON usare networkidle (LEGO non lo raggiunge mai)
+            page.goto(url, timeout=60000, wait_until="domcontentloaded")
+
+            # aspetta che React carichi contenuti
+            page.wait_for_selector("body", timeout=60000)
+            page.wait_for_timeout(8000)
 
             price = None
 
             # -------------------------
-            # 1. selector generico LEGO / e-commerce
+            # 1. prova selector LEGO (se esiste)
             # -------------------------
-            el = page.query_selector('[data-test="product-price"], [data-testid="product-price"]')
-            if el:
-                price = el.inner_text().strip()
+            try:
+                el = page.query_selector('[data-test="product-price"]')
+                if el:
+                    price = el.inner_text().strip()
+            except:
+                pass
 
             # -------------------------
-            # 2. Amazon fallback
+            # 2. fallback DOM (Amazon / altri)
             # -------------------------
             if not price:
                 price = page.evaluate("""
@@ -38,7 +46,7 @@ with sync_playwright() as p:
                 """)
 
             # -------------------------
-            # 3. fallback regex €
+            # 3. fallback universale (€ regex)
             # -------------------------
             if not price:
                 content = page.content()
@@ -53,10 +61,9 @@ with sync_playwright() as p:
             })
 
         except Exception as e:
-            # NON bloccare tutto se un prodotto fallisce
             results.append({
                 "name": item["name"],
-                "url": item["url"],
+                "url": url,
                 "price": None,
                 "error": str(e)
             })
