@@ -1,4 +1,4 @@
-name: Scrape LEGO prices
+name: Scrape prices
 
 on:
   workflow_dispatch:
@@ -21,12 +21,12 @@ jobs:
       - name: Install dependencies
         run: |
           pip install requests beautifulsoup4 playwright
-          playwright install
+          playwright install --with-deps
 
       - name: Run scraper
         run: python scraper.py
 
-      - name: Commit and push output
+      - name: Commit results
         uses: EndBug/add-and-commit@v9
         with:
           message: "update prices"
