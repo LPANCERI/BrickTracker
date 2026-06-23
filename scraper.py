@@ -12,32 +12,23 @@ with sync_playwright() as p:
     page = browser.new_page()
 
     for item in items:
-        url = item["url"]
-
-        page.goto(url, timeout=60000, wait_until="networkidle")
-        page.wait_for_timeout(5000)
-
-        price = None
-
         try:
-            # ----------------------------
-            # 1. LEGO (o siti con data-test)
-            # ----------------------------
-            selectors = [
-                '[data-test="product-price"]',
-                '[data-testid="product-price"]',
-                '.product-price'
-            ]
+            url = item["url"]
+            page.goto(url, timeout=60000, wait_until="networkidle")
+            page.wait_for_timeout(5000)
 
-            for sel in selectors:
-                el = page.query_selector(sel)
-                if el:
-                    price = el.inner_text().strip()
-                    break
+            price = None
 
-            # ----------------------------
-            # 2. AMAZON fallback
-            # ----------------------------
+            # -------------------------
+            # 1. selector generico LEGO / e-commerce
+            # -------------------------
+            el = page.query_selector('[data-test="product-price"], [data-testid="product-price"]')
+            if el:
+                price = el.inner_text().strip()
+
+            # -------------------------
+            # 2. Amazon fallback
+            # -------------------------
             if not price:
                 price = page.evaluate("""
                 () => {
@@ -46,25 +37,33 @@ with sync_playwright() as p:
                 }
                 """)
 
-            # ----------------------------
-            # 3. fallback generico (regex €)
-            # ----------------------------
+            # -------------------------
+            # 3. fallback regex €
+            # -------------------------
             if not price:
                 content = page.content()
                 match = re.search(r"€\s?\d+[.,]\d+", content)
                 if match:
                     price = match.group()
 
-        except Exception:
-            price = None
+            results.append({
+                "name": item["name"],
+                "url": url,
+                "price": price
+            })
 
-        results.append({
-            "name": item["name"],
-            "url": url,
-            "price": price
-        })
+        except Exception as e:
+            # NON bloccare tutto se un prodotto fallisce
+            results.append({
+                "name": item["name"],
+                "url": item["url"],
+                "price": None,
+                "error": str(e)
+            })
 
     browser.close()
 
 with open("output.json", "w", encoding="utf-8") as f:
     json.dump(results, f, indent=2, ensure_ascii=False)
+
+print("Done:", results)
