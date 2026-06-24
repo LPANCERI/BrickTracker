@@ -25,8 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
           buttonsHTML += `<a href="${set.amazon}" target="_blank" class="btn">Amazon</a>`;
         }
 
-        if (set.lacittadelmattoncino) {
-          buttonsHTML += `<a href="${set.lacittadelmattoncino}" target="_blank" class="btn">La Città del Mattoncino</a>`;
+        if (set.lacitadelmattoncino) {
+          buttonsHTML += `<a href="${set.lacitadelmattoncino}" target="_blank" class="btn">La Città del Mattoncino</a>`;
         }
 
         card.innerHTML = `
