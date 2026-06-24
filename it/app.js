@@ -14,6 +14,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = document.createElement("div");
         card.classList.add("set-card");
 
+        // container bottoni
+        let buttonsHTML = "";
+
+        if (set.lego) {
+          buttonsHTML += `<a href="${set.lego}" target="_blank" class="btn">LEGO</a>`;
+        }
+
+        if (set.amazon) {
+          buttonsHTML += `<a href="${set.amazon}" target="_blank" class="btn">Amazon</a>`;
+        }
+
+        if (set.lacittadelmattoncino) {
+          buttonsHTML += `<a href="${set.lacittadelmattoncino}" target="_blank" class="btn">La Città del Mattoncino</a>`;
+        }
+
         card.innerHTML = `
           <img src="${set.img}" alt="${set.nome}">
 
@@ -24,8 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="price">Prezzo di lancio: ${set.prezzo}</div>
 
             <div class="btn-container">
-              <a href="${set.lego}" target="_blank" class="btn">LEGO</a>
-              <a href="${set.amazon}" target="_blank" class="btn">Amazon</a>
+              ${buttonsHTML}
             </div>
 
           </div>
