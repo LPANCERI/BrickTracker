@@ -45,15 +45,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         `);
       }
 
-      // La Città del Mattoncino (con prezzo dentro il bottone)
-      if (priceData?.url) {
-        const lcdmPrice = priceData?.price
-          ? ` €${priceData.price}`
-          : "";
+      // prezzo LCdM pulito (evita doppio €)
+      let lcdmPrice = "";
+      if (priceData?.price) {
+        const raw = String(priceData.price).trim();
+        lcdmPrice = raw.startsWith("€") ? raw : `€${raw}`;
+      }
 
+      // La Città del Mattoncino
+      if (priceData?.url) {
         buttons.push(`
           <a href="${priceData.url}" target="_blank" class="btn btn-lcdm">
-            La Città del Mattoncino${lcdmPrice}
+            La Città del Mattoncino${lcdmPrice ? ` ${lcdmPrice}` : ""}
           </a>
         `);
       }
