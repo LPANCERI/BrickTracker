@@ -1,80 +1,57 @@
 import json
 import re
 from playwright.sync_api import sync_playwright
+from pathlib import Path
 
-with open("input.json", "r", encoding="utf-8") as f:
-    items = json.load(f)
+INPUT_PATH = Path("it/harry-potter/data.json")
 
 results = []
 
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
 
-    for item in items:
-        url = item["url"]
-
-        # usa sempre id (standardizzato)
+    for item in json.load(open(INPUT_PATH, "r", encoding="utf-8")):
+        
+        # 🔥 QUI LA MODIFICA
+        url = item.get("lacittadelmattoncino")
         product_id = item.get("id")
+
+        if not url:
+            print(f"Skipping item {product_id}: missing lacittadelmattoncino")
+            continue
 
         page = browser.new_page()
 
         try:
             print(f"\n--- Processing: {url}")
 
-            page.goto(
-                url,
-                timeout=60000,
-                wait_until="domcontentloaded"
-            )
-
+            page.goto(url, timeout=60000, wait_until="domcontentloaded")
             page.wait_for_selector("body", timeout=60000)
-            page.wait_for_timeout(5000)
 
             price = None
 
             # LEGO
-            try:
-                el = page.query_selector('[data-test="product-price"]')
-                if el:
-                    price = el.inner_text().strip()
-                    print("Found LEGO price:", price)
-            except Exception:
-                pass
+            el = page.query_selector('[data-test="product-price"]')
+            if el:
+                price = el.inner_text().strip()
 
             # BooksToScrape
             if not price:
-                try:
-                    el = page.query_selector(".price_color")
-                    if el:
-                        price = el.inner_text().strip()
-                        print("Found BooksToScrape price:", price)
-                except Exception:
-                    pass
+                el = page.query_selector(".price_color")
+                if el:
+                    price = el.inner_text().strip()
 
             # Amazon
             if not price:
-                try:
-                    el = page.query_selector("span.a-offscreen")
-                    if el:
-                        price = el.inner_text().strip()
-                        print("Found Amazon price:", price)
-                except Exception:
-                    pass
+                el = page.query_selector("span.a-offscreen")
+                if el:
+                    price = el.inner_text().strip()
 
-            # Fallback regex
+            # fallback regex
             if not price:
-                content = page.content()
-
-                match = re.search(
-                    r"[€£$]\s?\d+[.,]\d+",
-                    content
-                )
-
+                match = re.search(r"[€£$]\s?\d+[.,]\d+", page.content())
                 if match:
                     price = match.group()
-                    print("Found regex price:", price)
-
-            print("Final price:", price)
 
             results.append({
                 "id": product_id,
@@ -83,8 +60,6 @@ with sync_playwright() as p:
             })
 
         except Exception as e:
-            print("ERROR:", str(e))
-
             results.append({
                 "id": product_id,
                 "url": url,
@@ -100,5 +75,4 @@ with sync_playwright() as p:
 with open("output.json", "w", encoding="utf-8") as f:
     json.dump(results, f, indent=2, ensure_ascii=False)
 
-print("\nDone:")
-print(json.dumps(results, indent=2, ensure_ascii=False))
+print("\nDone")
