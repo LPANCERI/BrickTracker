@@ -1,21 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   Promise.all([
-    fetch("../data.json").then(res => res.json()),
-    fetch("../output.json").then(res => res.json())
+    fetch("./data.json").then(res => {
+      if (!res.ok) throw new Error("Errore caricamento data.json");
+      return res.json();
+    }),
+    fetch("../output.json").then(res => {
+      if (!res.ok) throw new Error("Errore caricamento output.json");
+      return res.json();
+    })
   ])
   .then(([data, output]) => {
 
-    // crea mappa id -> price
     const priceMap = new Map(
-      output.map(item => [item.id, item.price])
+      output.map(item => [String(item.id), item.price])
     );
 
     const container = document.getElementById("sets-container");
 
     data.forEach(set => {
 
-      const price = priceMap.get(set.set) || set.prezzo;
+      const id = String(set.id || set.set);
+      const price = priceMap.get(id) ?? set.prezzo ?? "N/D";
 
       const card = document.createElement("div");
       card.classList.add("set-card");
@@ -50,11 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="set-info">
 
           <div class="set-title">
-            ${set.nome} - #${set.set}
+            ${set.nome} - #${id}
           </div>
 
           <div class="set-price">
-            Prezzo di lancio: ${price ?? "N/D"}
+            Prezzo di lancio: ${price}
           </div>
 
           <div class="set-buttons">
