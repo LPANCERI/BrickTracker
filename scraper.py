@@ -1,57 +1,89 @@
 import json
 import re
-from playwright.sync_api import sync_playwright
 from pathlib import Path
+from playwright.sync_api import sync_playwright
 
-INPUT_PATH = Path("it/harry-potter/data.json")
+# 📁 PATH ROBUSTO (NON dipende da dove lanci il file)
+INPUT_PATH = Path(__file__).parent / "it" / "data.json"
+OUTPUT_PATH = Path(__file__).parent / "output.json"
+
+PRICE_SELECTORS = [
+    '[data-test="product-price"]',
+    ".price_color",
+    "span.a-offscreen"
+]
+
+PRICE_REGEX = re.compile(r"[€£$]\s?\d+[.,]\d+")
+
+
+def extract_price(page):
+    # 1. selectors specifici
+    for selector in PRICE_SELECTORS:
+        el = page.query_selector(selector)
+        if el:
+            price = el.inner_text().strip()
+            if price:
+                return price
+
+    # 2. fallback regex
+    match = PRICE_REGEX.search(page.content())
+    if match:
+        return match.group()
+
+    return None
+
+
+def normalize_url(url: str) -> str:
+    if not url:
+        return None
+
+    url = url.strip()
+
+    # se è path relativo
+    if url.startswith("/"):
+        url = "https://lacittadelmattoncino" + url
+
+    # se contiene già dominio vecchio (non necessario ma safe)
+    url = url.replace("http://lacittadelmattoncino", "https://lacittadelmattoncino")
+    url = url.replace("lacittadelmattoncino", "https://lacittadelmattoncino")
+
+    return url
+
+
+# 📥 LOAD DATA
+if not INPUT_PATH.exists():
+    raise FileNotFoundError(f"File non trovato: {INPUT_PATH}")
+
+with open(INPUT_PATH, "r", encoding="utf-8") as f:
+    items = json.load(f)
+
+print(f"Loaded items: {len(items)}")
 
 results = []
 
+# 🌐 SCRAPING
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
+    page = browser.new_page()
 
-    for item in json.load(open(INPUT_PATH, "r", encoding="utf-8")):
-        
-        # 🔥 QUI LA MODIFICA
-        url = item.get("lacittadelmattoncino")
+    for item in items:
         product_id = item.get("id")
+        raw_url = item.get("lacittadelmattoncino")
+
+        url = normalize_url(raw_url)
 
         if not url:
-            print(f"Skipping item {product_id}: missing lacittadelmattoncino")
+            print(f"Skipping {product_id}: missing URL")
             continue
-
-        page = browser.new_page()
 
         try:
             print(f"\n--- Processing: {url}")
 
             page.goto(url, timeout=60000, wait_until="domcontentloaded")
-            page.wait_for_selector("body", timeout=60000)
 
-            price = None
+            price = extract_price(page)
 
-            # LEGO
-            el = page.query_selector('[data-test="product-price"]')
-            if el:
-                price = el.inner_text().strip()
-
-            # BooksToScrape
-            if not price:
-                el = page.query_selector(".price_color")
-                if el:
-                    price = el.inner_text().strip()
-
-            # Amazon
-            if not price:
-                el = page.query_selector("span.a-offscreen")
-                if el:
-                    price = el.inner_text().strip()
-
-            # fallback regex
-            if not price:
-                match = re.search(r"[€£$]\s?\d+[.,]\d+", page.content())
-                if match:
-                    price = match.group()
+            print("Price:", price)
 
             results.append({
                 "id": product_id,
@@ -60,6 +92,8 @@ with sync_playwright() as p:
             })
 
         except Exception as e:
+            print("ERROR:", str(e))
+
             results.append({
                 "id": product_id,
                 "url": url,
@@ -67,12 +101,10 @@ with sync_playwright() as p:
                 "error": str(e)
             })
 
-        finally:
-            page.close()
-
     browser.close()
 
-with open("output.json", "w", encoding="utf-8") as f:
+# 💾 OUTPUT
+with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
     json.dump(results, f, indent=2, ensure_ascii=False)
 
-print("\nDone")
+print("\nDone. Saved to output.json")
