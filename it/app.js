@@ -1,9 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    // Carico entrambi i JSON
     const [setsRes, pricesRes] = await Promise.all([
       fetch("../data.json"),
-      fetch("../../output.json") // <-- root del progetto
+      fetch("../../output.json")
     ]);
 
     if (!setsRes.ok || !pricesRes.ok) {
@@ -15,14 +14,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const container = document.getElementById("sets-container");
 
-    // Map per accesso veloce ai prezzi (più efficiente di find)
-    const priceMap = new Map(prices.map(p => [p.id, p]));
+    // mappa prezzi output.json
+    const priceMap = new Map(
+      prices.map(p => [String(p.id), p])
+    );
 
     sets.forEach(set => {
-      const priceData = priceMap.get(set.set); // match ID
+      const priceData = priceMap.get(String(set.set));
 
-      const card = document.createElement("div");
-      card.classList.add("set-card");
+      // prezzi separati
+      const prezzoBase = set.prezzo ?? "Non disponibile";
+      const prezzoLCDM = priceData?.price ?? "Non disponibile";
 
       const buttons = [];
 
@@ -50,6 +52,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         `);
       }
 
+      const card = document.createElement("div");
+      card.classList.add("set-card");
+
       card.innerHTML = `
         <div class="set-media">
           <img src="${set.img}" alt="${set.nome}">
@@ -62,7 +67,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           </div>
 
           <div class="set-price">
-            Prezzo di lancio: ${priceData?.price ?? "Non disponibile"}
+            <div>Prezzo di lancio: ${prezzoBase}</div>
+            <div>La Città del Mattoncino: ${prezzoLCDM}</div>
           </div>
 
           <div class="set-buttons">
