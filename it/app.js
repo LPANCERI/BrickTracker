@@ -19,13 +19,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       prices.map(p => [String(p.id), p])
     );
 
+    // =========================
+    // 🔥 RENDER SET PRINCIPALI
+    // =========================
     sets.forEach(set => {
       const priceData = priceMap.get(String(set.set));
 
-      // prezzo base da data.json
       const prezzoBase = set.prezzo ?? "Non disponibile";
 
-      // prezzo da output.json (solo LCDM)
       let lcdmPrice = "";
       if (priceData?.price) {
         const raw = String(priceData.price).trim();
@@ -34,7 +35,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const buttons = [];
 
-      // LEGO
       if (set.lego) {
         buttons.push(`
           <a href="${set.lego}" target="_blank" class="btn btn-lego">
@@ -43,7 +43,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         `);
       }
 
-      // Amazon
       if (set.amazon) {
         buttons.push(`
           <a href="${set.amazon}" target="_blank" class="btn btn-amazon">
@@ -52,7 +51,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         `);
       }
 
-      // La Città del Mattoncino (sempre da data.json)
       if (set.lacittadelmattoncino) {
         buttons.push(`
           <a href="${set.lacittadelmattoncino}" target="_blank" class="btn btn-lcdm">
@@ -88,6 +86,43 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       container.appendChild(card);
     });
+
+    // =========================
+    // 🔥 NUOVA SEZIONE > 50€
+    // =========================
+    const highPriceContainer = document.getElementById("high-price-container");
+
+    if (highPriceContainer) {
+      const highPriceSets = sets.filter(set => {
+        const prezzo = parseFloat(set.prezzo);
+        return !isNaN(prezzo) && prezzo > 50;
+      });
+
+      const sectionTitle = document.createElement("h2");
+      sectionTitle.textContent = "🔥 Set sopra i 50€";
+
+      const wrapper = document.createElement("div");
+      wrapper.classList.add("offers");
+
+      highPriceSets.forEach(set => {
+        const item = document.createElement("div");
+        item.classList.add("offer-item");
+
+        item.innerHTML = `
+          <strong>${set.nome} - #${set.set}</strong><br>
+          <span class="price">${set.prezzo}</span>
+        `;
+
+        wrapper.appendChild(item);
+      });
+
+      if (highPriceSets.length === 0) {
+        wrapper.innerHTML = "<p>Nessun set sopra i 50€.</p>";
+      }
+
+      highPriceContainer.appendChild(sectionTitle);
+      highPriceContainer.appendChild(wrapper);
+    }
 
   } catch (err) {
     console.error("Errore nel caricamento dei dati:", err);
