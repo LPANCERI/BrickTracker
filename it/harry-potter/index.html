@@ -83,19 +83,18 @@
       font-weight: bold;
     }
 
-    .btn-container {
+    /* ✅ FIX BOTTONI */
+    .set-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
       margin-top: 6px;
     }
 
-    /* Spazio sopra il pulsante "La Città del Mattoncino" */
-    .lcdm-container {
-      display: block;
-      margin-top: 10px;
-    }
-
     .btn {
-      display: inline-block;
-      margin-right: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 6px 10px;
       font-size: 12px;
       background: #d0021b;
@@ -104,6 +103,7 @@
       border-radius: 5px;
       font-weight: bold;
       transition: background 0.2s ease;
+      white-space: nowrap;
     }
 
     .btn:hover {
