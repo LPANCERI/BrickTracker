@@ -14,24 +14,24 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = document.createElement("div");
         card.classList.add("set-card");
 
-        // Pulsanti LEGO e Amazon
+        // Bottoni principali (LEGO / Amazon)
         let buttonsHTML = "";
 
         if (set.lego) {
-          buttonsHTML += `<a href="${set.lego}" target="_blank" class="btn">LEGO</a>`;
+          buttonsHTML += `<a href="${set.lego}" target="_blank" class="btn btn-lego">LEGO</a>`;
         }
 
         if (set.amazon) {
-          buttonsHTML += `<a href="${set.amazon}" target="_blank" class="btn">Amazon</a>`;
+          buttonsHTML += `<a href="${set.amazon}" target="_blank" class="btn btn-amazon">Amazon</a>`;
         }
 
-        // Pulsante La Città del Mattoncino (sotto)
+        // Link La Città del Mattoncino
         let lcdmHTML = "";
 
         if (set.lacittadelmattoncino) {
           lcdmHTML = `
             <div class="lcdm-container">
-              <a href="${set.lacittadelmattoncino}" target="_blank" class="btn">
+              <a href="${set.lacittadelmattoncino}" target="_blank" class="btn btn-lcdm">
                 La Città del Mattoncino
               </a>
             </div>
@@ -39,15 +39,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         card.innerHTML = `
-          <img src="${set.img}" alt="${set.nome}">
+          <div class="set-media">
+            <img src="${set.img}" alt="${set.nome}">
+          </div>
 
           <div class="set-info">
 
-            <div>${set.nome} - #${set.set}</div>
+            <div class="set-title">
+              ${set.nome} - #${set.set}
+            </div>
 
-            <div class="price">Prezzo di lancio: ${set.prezzo}</div>
+            <div class="set-price">
+              Prezzo di lancio: ${set.prezzo}
+            </div>
 
-            <div class="btn-container">
+            <div class="set-buttons">
               ${buttonsHTML}
             </div>
 
