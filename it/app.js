@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const container = document.getElementById("sets-container");
 
-    // mappa prezzi output.json
+    // mappa output.json
     const priceMap = new Map(
       prices.map(p => [String(p.id), p])
     );
@@ -22,12 +22,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     sets.forEach(set => {
       const priceData = priceMap.get(String(set.set));
 
-      // prezzi separati
+      // prezzo principale (data.json)
       const prezzoBase = set.prezzo ?? "Non disponibile";
-      const prezzoLCDM = priceData?.price ?? "Non disponibile";
 
       const buttons = [];
 
+      // LEGO
       if (set.lego) {
         buttons.push(`
           <a href="${set.lego}" target="_blank" class="btn btn-lego">
@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         `);
       }
 
+      // Amazon
       if (set.amazon) {
         buttons.push(`
           <a href="${set.amazon}" target="_blank" class="btn btn-amazon">
@@ -44,11 +45,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         `);
       }
 
+      // La Città del Mattoncino + prezzo affiancato
       if (priceData?.url) {
         buttons.push(`
-          <a href="${priceData.url}" target="_blank" class="btn btn-lcdm">
-            La Città del Mattoncino
-          </a>
+          <div class="lcdm-wrapper">
+            <a href="${priceData.url}" target="_blank" class="btn btn-lcdm">
+              La Città del Mattoncino
+            </a>
+            <span class="lcdm-price">
+              ${priceData?.price ?? "N/D"}
+            </span>
+          </div>
         `);
       }
 
@@ -67,8 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           </div>
 
           <div class="set-price">
-            <div>Prezzo di lancio: ${prezzoBase}</div>
-            <div>La Città del Mattoncino: ${prezzoLCDM}</div>
+            Prezzo di lancio: ${prezzoBase}
           </div>
 
           <div class="set-buttons">
