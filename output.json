@@ -1,14 +1,12 @@
 [
   {
     "id": "76469",
-    "url": "https://www.https://lacittadelmattoncino.it/prodotto/dobby-lelfo-libero/",
-    "price": null,
-    "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://www.https//lacittadelmattoncino.it/prodotto/dobby-lelfo-libero/\nCall log:\n  - navigating to \"https://www.https//lacittadelmattoncino.it/prodotto/dobby-lelfo-libero/\", waiting until \"domcontentloaded\"\n"
+    "url": "https://www.lacittadelmattoncino.it/prodotto/dobby-lelfo-libero/",
+    "price": "€34,99"
   },
   {
     "id": "76462",
-    "url": "https://www.https://lacittadelmattoncino.it/prodotto/stemma-della-casa-di-hogwarts/",
-    "price": null,
-    "error": "Page.goto: net::ERR_NAME_NOT_RESOLVED at https://www.https//lacittadelmattoncino.it/prodotto/stemma-della-casa-di-hogwarts/\nCall log:\n  - navigating to \"https://www.https//lacittadelmattoncino.it/prodotto/stemma-della-casa-di-hogwarts/\", waiting until \"domcontentloaded\"\n"
+    "url": "https://www.lacittadelmattoncino.it/prodotto/stemma-della-casa-di-hogwarts/",
+    "price": "€49,99"
   }
 ]
