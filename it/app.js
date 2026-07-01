@@ -1,70 +1,81 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    // Carico entrambi i JSON
+    const [setsRes, pricesRes] = await Promise.all([
+      fetch("../data.json"),
+      fetch("/output.json") // <-- root del progetto
+    ]);
 
-  fetch("../data.json")
-    .then(res => {
-      if (!res.ok) {
-        throw new Error("Errore nel caricamento del JSON");
+    if (!setsRes.ok || !pricesRes.ok) {
+      throw new Error("Errore nel caricamento dei JSON");
+    }
+
+    const sets = await setsRes.json();
+    const prices = await pricesRes.json();
+
+    const container = document.getElementById("sets-container");
+
+    // Map per accesso veloce ai prezzi (più efficiente di find)
+    const priceMap = new Map(prices.map(p => [p.id, p]));
+
+    sets.forEach(set => {
+      const priceData = priceMap.get(set.set); // match ID
+
+      const card = document.createElement("div");
+      card.classList.add("set-card");
+
+      const buttons = [];
+
+      if (set.lego) {
+        buttons.push(`
+          <a href="${set.lego}" target="_blank" class="btn btn-lego">
+            LEGO
+          </a>
+        `);
       }
-      return res.json();
-    })
-    .then(data => {
-      const container = document.getElementById("sets-container");
 
-      data.forEach(set => {
-        const card = document.createElement("div");
-        card.classList.add("set-card");
+      if (set.amazon) {
+        buttons.push(`
+          <a href="${set.amazon}" target="_blank" class="btn btn-amazon">
+            Amazon
+          </a>
+        `);
+      }
 
-        let buttonsHTML = "";
+      if (priceData?.url) {
+        buttons.push(`
+          <a href="${priceData.url}" target="_blank" class="btn btn-lcdm">
+            La Città del Mattoncino
+          </a>
+        `);
+      }
 
-        if (set.lego) {
-          buttonsHTML += `<a href="${set.lego}" target="_blank" class="btn btn-lego">LEGO</a>`;
-        }
+      card.innerHTML = `
+        <div class="set-media">
+          <img src="${set.img}" alt="${set.nome}">
+        </div>
 
-        if (set.amazon) {
-          buttonsHTML += `<a href="${set.amazon}" target="_blank" class="btn btn-amazon">Amazon</a>`;
-        }
+        <div class="set-info">
 
-        let lcdmHTML = "";
-
-        if (set.lacittadelmattoncino) {
-          lcdmHTML = `
-            <div class="lcdm-container">
-              <a href="${set.lacittadelmattoncino}" target="_blank" class="btn btn-lcdm">
-                La Città del Mattoncino
-              </a>
-            </div>
-          `;
-        }
-
-        card.innerHTML = `
-          <div class="set-media">
-            <img src="${set.img}" alt="${set.nome}">
+          <div class="set-title">
+            ${set.nome} - #${set.set}
           </div>
 
-          <div class="set-info">
-
-            <div class="set-title">
-              ${set.nome} - #${set.set}
-            </div>
-
-            <div class="set-price">
-              Prezzo di lancio: ${set.prezzo}
-            </div>
-
-            <div class="set-buttons">
-              ${buttonsHTML}
-            </div>
-
-            ${lcdmHTML}
-
+          <div class="set-price">
+            Prezzo di lancio: ${priceData?.price ?? "Non disponibile"}
           </div>
-        `;
 
-        container.appendChild(card);
-      });
-    })
-    .catch(err => {
-      console.error("Errore nel caricamento dei dati:", err);
+          <div class="set-buttons">
+            ${buttons.join("")}
+          </div>
+
+        </div>
+      `;
+
+      container.appendChild(card);
     });
 
+  } catch (err) {
+    console.error("Errore nel caricamento dei dati:", err);
+  }
 });
