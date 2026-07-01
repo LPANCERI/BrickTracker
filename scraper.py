@@ -13,6 +13,9 @@ with sync_playwright() as p:
     for item in items:
         url = item["url"]
 
+        # usa sempre id (standardizzato)
+        product_id = item.get("id")
+
         page = browser.new_page()
 
         try:
@@ -74,7 +77,7 @@ with sync_playwright() as p:
             print("Final price:", price)
 
             results.append({
-                "name": item["name"],
+                "id": product_id,
                 "url": url,
                 "price": price
             })
@@ -83,7 +86,7 @@ with sync_playwright() as p:
             print("ERROR:", str(e))
 
             results.append({
-                "name": item["name"],
+                "id": product_id,
                 "url": url,
                 "price": None,
                 "error": str(e)
