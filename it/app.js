@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       // prezzo base da data.json
       const prezzoBase = set.prezzo ?? "Non disponibile";
 
-      // prezzo LCDM da output.json
+      // prezzo da output.json (solo LCDM)
       let lcdmPrice = "";
       if (priceData?.price) {
         const raw = String(priceData.price).trim();
@@ -52,10 +52,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         `);
       }
 
-      // La Città del Mattoncino (sempre se presente in data.json)
-      if (set.lcdm) {
+      // La Città del Mattoncino (sempre da data.json)
+      if (set.lacittadelmattoncino) {
         buttons.push(`
-          <a href="${set.lcdm}" target="_blank" class="btn btn-lcdm">
+          <a href="${set.lacittadelmattoncino}" target="_blank" class="btn btn-lcdm">
             La Città del Mattoncino${lcdmPrice ? ` ${lcdmPrice}` : ""}
           </a>
         `);
