@@ -1,18 +1,39 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  fetch("../data.json")
-    .then(res => {
-      if (!res.ok) {
-        throw new Error("Errore nel caricamento del JSON");
+  Promise.all([
+    fetch("../data.json"),
+    fetch("../output.json")
+  ])
+    .then(([resData, resOutput]) => {
+
+      if (!resData.ok) {
+        throw new Error("Errore nel caricamento del data.json");
       }
-      return res.json();
+
+      if (!resOutput.ok) {
+        throw new Error("Errore nel caricamento del output.json");
+      }
+
+      return Promise.all([
+        resData.json(),
+        resOutput.json()
+      ]);
     })
-    .then(data => {
+    .then(([data, output]) => {
+
       const container = document.getElementById("sets-container");
 
+      // 🔥 mappa output: name -> oggetto
+      const outputMap = Object.fromEntries(
+        output.map(item => [item.name, item])
+      );
+
       data.forEach(set => {
+
         const card = document.createElement("div");
         card.classList.add("set-card");
+
+        const extra = outputMap[set.id]; // MATCH id ↔ name
 
         let buttonsHTML = "";
 
@@ -51,6 +72,12 @@ document.addEventListener("DOMContentLoaded", () => {
               Prezzo di lancio: ${set.prezzo}
             </div>
 
+            ${extra ? `
+              <div class="set-price-extra">
+                Prezzo disponibile: ${extra.price}
+              </div>
+            ` : ''}
+
             <div class="set-buttons">
               ${buttonsHTML}
             </div>
@@ -62,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         container.appendChild(card);
       });
+
     })
     .catch(err => {
       console.error("Errore nel caricamento dei dati:", err);
