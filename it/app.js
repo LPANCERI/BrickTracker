@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Carico entrambi i JSON
     const [setsRes, pricesRes] = await Promise.all([
       fetch("../data.json"),
-      fetch("/output.json") // <-- root del progetto
+      fetch("../../output.json") // <-- root del progetto
     ]);
 
     if (!setsRes.ok || !pricesRes.ok) {
