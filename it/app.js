@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   Promise.all([
-    fetch("./data.json").then(res => {
+    fetch("data.json").then(res => {
       if (!res.ok) throw new Error("Errore caricamento data.json");
       return res.json();
     }),
+
     fetch("/output.json").then(res => {
       if (!res.ok) throw new Error("Errore caricamento output.json");
       return res.json();
