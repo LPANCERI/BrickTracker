@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = document.createElement("div");
         card.classList.add("set-card");
 
-        // container bottoni
+        // Pulsanti LEGO e Amazon
         let buttonsHTML = "";
 
         if (set.lego) {
@@ -25,8 +25,17 @@ document.addEventListener("DOMContentLoaded", () => {
           buttonsHTML += `<a href="${set.amazon}" target="_blank" class="btn">Amazon</a>`;
         }
 
+        // Pulsante La Città del Mattoncino (sotto)
+        let lcdmHTML = "";
+
         if (set.lacittadelmattoncino) {
-          buttonsHTML += `<a href="${set.lacittadelmattoncino}" target="_blank" class="btn">La Città del Mattoncino</a>`;
+          lcdmHTML = `
+            <div class="lcdm-container">
+              <a href="${set.lacittadelmattoncino}" target="_blank" class="btn">
+                La Città del Mattoncino
+              </a>
+            </div>
+          `;
         }
 
         card.innerHTML = `
@@ -41,6 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="btn-container">
               ${buttonsHTML}
             </div>
+
+            ${lcdmHTML}
 
           </div>
         `;
