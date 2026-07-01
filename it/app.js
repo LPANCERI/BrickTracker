@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const card = document.createElement("div");
         card.classList.add("set-card");
 
-        // Bottoni principali (LEGO / Amazon)
         let buttonsHTML = "";
 
         if (set.lego) {
@@ -25,7 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
           buttonsHTML += `<a href="${set.amazon}" target="_blank" class="btn btn-amazon">Amazon</a>`;
         }
 
-        // Link La Città del Mattoncino
         let lcdmHTML = "";
 
         if (set.lacittadelmattoncino) {
