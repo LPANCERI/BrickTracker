@@ -3,10 +3,11 @@ import re
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
-# 📁 PATH ROBUSTO (NON dipende da dove lanci il file)
+# 📁 PATH
 INPUT_PATH = Path(__file__).parent / "it" / "data.json"
 OUTPUT_PATH = Path(__file__).parent / "output.json"
 
+# 🎯 selectors prezzo
 PRICE_SELECTORS = [
     '[data-test="product-price"]',
     ".price_color",
@@ -33,27 +34,7 @@ def extract_price(page):
     return None
 
 
-def normalize_url(url: str) -> str:
-    if not url:
-        return None
-
-    url = url.strip()
-
-    # se è path relativo
-    if url.startswith("/"):
-        url = "https://lacittadelmattoncino" + url
-
-    # se contiene già dominio vecchio (non necessario ma safe)
-    url = url.replace("http://lacittadelmattoncino", "https://lacittadelmattoncino")
-    url = url.replace("lacittadelmattoncino", "https://lacittadelmattoncino")
-
-    return url
-
-
 # 📥 LOAD DATA
-if not INPUT_PATH.exists():
-    raise FileNotFoundError(f"File non trovato: {INPUT_PATH}")
-
 with open(INPUT_PATH, "r", encoding="utf-8") as f:
     items = json.load(f)
 
@@ -68,18 +49,23 @@ with sync_playwright() as p:
 
     for item in items:
         product_id = item.get("id")
-        raw_url = item.get("lacittadelmattoncino")
 
-        url = normalize_url(raw_url)
+        # 🔥 QUI LA CHIAVE GIUSTA
+        url = item.get("lacittadelmattoncino")
 
         if not url:
             print(f"Skipping {product_id}: missing URL")
             continue
 
+        url = url.strip()
+
         try:
             print(f"\n--- Processing: {url}")
 
             page.goto(url, timeout=60000, wait_until="domcontentloaded")
+
+            # piccolo buffer per caricamento dinamico
+            page.wait_for_timeout(3000)
 
             price = extract_price(page)
 
