@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const container = document.getElementById("sets-container");
 
-    // mappa output.json
+    // mappa output.json (id → prezzo)
     const priceMap = new Map(
       prices.map(p => [String(p.id), p])
     );
@@ -22,8 +22,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     sets.forEach(set => {
       const priceData = priceMap.get(String(set.set));
 
-      // prezzo da data.json
+      // prezzo base da data.json
       const prezzoBase = set.prezzo ?? "Non disponibile";
+
+      // prezzo LCDM da output.json
+      let lcdmPrice = "";
+      if (priceData?.price) {
+        const raw = String(priceData.price).trim();
+        lcdmPrice = raw.startsWith("€") ? raw : `€${raw}`;
+      }
 
       const buttons = [];
 
@@ -45,17 +52,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         `);
       }
 
-      // prezzo LCdM pulito (evita doppio €)
-      let lcdmPrice = "";
-      if (priceData?.price) {
-        const raw = String(priceData.price).trim();
-        lcdmPrice = raw.startsWith("€") ? raw : `€${raw}`;
-      }
-
-      // La Città del Mattoncino
-      if (priceData?.url) {
+      // La Città del Mattoncino (sempre se presente in data.json)
+      if (set.lcdm) {
         buttons.push(`
-          <a href="${priceData.url}" target="_blank" class="btn btn-lcdm">
+          <a href="${set.lcdm}" target="_blank" class="btn btn-lcdm">
             La Città del Mattoncino${lcdmPrice ? ` ${lcdmPrice}` : ""}
           </a>
         `);
